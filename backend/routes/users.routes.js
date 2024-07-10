@@ -16,4 +16,4 @@ router.post('/verify',verifyUser);
 
 router.all('/*',notFound)
 
-module.exports.router=router;
+module.exports=router;
