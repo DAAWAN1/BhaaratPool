@@ -4,16 +4,24 @@ const randomstring = require('randomstring');
 
 const emailSchema=zod.string().email();
 const passwordSchema = zod.string().min(6);
-const phoneSchema=zod.number().min(10).max(10);
+const phoneSchema=zod.number().min(1000000000).max(9999999999);
 const nameSchema=zod.string();
-const addharSchema=zod.number().min(12).max(12);
+const addharSchema=zod.number().min(100000000000).max(999999999999);
 const addressSchema=zod.string();
 
-const validate=(email,password,phoneNumber,name,address,addharCardNumber)=>{
-  if(emailSchema.parse(email)&&passwordSchema.parse(password)&&phoneSchema(phoneNumber)&&nameSchema(name)&&addressSchema.parse(address)&&addharSchema.parse(addharCardNumber)){
-    return true;
-  }else{
-    return false;
+const validate=(email,password,phoneNumber,name,address,aadharCardNumber)=>{
+
+  try{
+    emailSchema.parse(email) 
+    passwordSchema.parse(password)
+    phoneSchema.parse(phoneNumber)
+    nameSchema.parse(name)
+    addressSchema.parse(address)
+    addharSchema.parse(aadharCardNumber)
+    return {"success":true};
+  }catch(error){
+    let message=JSON.parse(error.message)[0].message;
+    return {message:message,"success":false}
   }
 }
 
@@ -23,7 +31,6 @@ function generateOTP() {
       charset: 'numeric'
   });
 }
-
 
 const getUser= async(req,res)=>{
   const id=req.params.id;
@@ -40,10 +47,11 @@ const getUser= async(req,res)=>{
 }
 
 const createUser=async(req,res)=>{
-  const {email,password,phoneNumber,name,address,addharCardNumber}=req.params.body;
-  let validateUser=validate(email,password,phoneNumber,name,address,addharCardNumber);
-  if(validateUser){
-    let user=new User({email,password,phoneNumber,name,address,addharCardNumber});
+  const {email,password,phoneNumber,name,address,aadharCardNumber}=req.body;
+  console.log(phoneNumber);
+  let validateUser=validate(email,password,phoneNumber,name,address,aadharCardNumber);
+  if(validateUser.success){
+    let user=new User({email,password,phoneNumber,name,address,aadharCardNumber});
     try{
       await user.save();
     }catch(error){
@@ -51,24 +59,24 @@ const createUser=async(req,res)=>{
     }
     res.json({'message':'user created successfully','success':true})
   }else{
-    res.json({'message':'Invalid details','success':false})
+    res.json({'message':validateUser.message,'success':false})
   }
 }
 
 const updateUser=async(req,res)=>{
-  const {email,password,phoneNumber,name,address,addharCardNumber}=req.params.body;
-  let validateUser=validate(email,password,phoneNumber,name,address,addharCardNumber);
-  if(validateUser){
+  const {email,password,phoneNumber,name,address,aadharCardNumber}=req.body;
+  let validateUser=validate(email,password,phoneNumber,name,address,aadharCardNumber);
+  if(validateUser.success){
     let id=req.params.id;
     const user=await User.findOne({'_id':id});
     if(user){
-      await User.updateOne({'_id':id},{email,password,phoneNumber,name,address,addharCardNumber});
+      await User.updateOne({'_id':id},{email,password,phoneNumber,name,address,aadharCardNumber});
       res.json({'message':'user updated successfully','success':true})
     }else{
       res.json({'message':'user does not exists','success':false});
     }
   }else{
-    res.json({'message':'Invalid details','success':false})
+    res.json({'message':validateUser.message,'success':false})
   }
 }
 
@@ -77,7 +85,7 @@ const registerUser=async(req,res)=>{
    const user=await User.findOne({phoneNumber});
    const otp=generateOTP();
    try{
-    await User.updateOne({'_id':user_id},{otp})
+    await User.updateOne({'_id':user._id},{otp})
    }catch(error){
     res.json({'message':error.message,'success':false});
    }
@@ -85,7 +93,16 @@ const registerUser=async(req,res)=>{
 }
 
 const verifyUser=async(req,res)=>{
-
+  const {otp}=req.body;
+  const user=await User.findOne({otp});
+  if(user){
+    try{
+      await User.updateOne({'_id':user._id},{otp:null,is_validated:true})
+    }catch(error){
+      res.json({'message':error.message,'success':false});
+    }
+    res.json({'message':'user validated successfully','success':true})
+  }
 }
 
 module.exports={

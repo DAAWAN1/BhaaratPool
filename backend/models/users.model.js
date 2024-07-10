@@ -21,10 +21,11 @@ const UserSchema=new mongoose.Schema({
     'password':{
         type:String,
         required:true,
+        select:false
     },
     'address':{
         type:String,
-        required:true,
+        required:true
     },
     'is_verified':{
         type:Boolean,
@@ -48,7 +49,8 @@ const UserSchema=new mongoose.Schema({
     'otp':{
         type:Number,
         required:false,
-        default:null
+        default:null,
+        select:false
     }
 })
 
