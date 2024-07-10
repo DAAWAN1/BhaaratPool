@@ -1,5 +1,7 @@
 import 'dart:ui';
-import 'package:carpool_2/Screens/search_page.dart';
+import 'package:carpool_2/Screens/profile_screen.dart';
+import 'package:carpool_2/widgets/floating_actionButton.dart';
+import 'package:carpool_2/widgets/icon_buttons_bt_appbar.dart';
 import 'package:carpool_2/widgets/input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -14,13 +16,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   final headers = {
     'X-CSCAPI-KEY': 'YOUR_API_KEY',
   };
 
   Future<void> getStatus() async {
-    final request = http.Request('GET', Uri.parse('https://api.countrystatecity.in/v1/countries'));
+    final request = http.Request(
+        'GET', Uri.parse('https://api.countrystatecity.in/v1/countries'));
     request.headers.addAll(headers);
 
     try {
@@ -36,61 +38,23 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Widget buildFloatingActionButton() {
-    return FloatingActionButton(
-      onPressed: () async{
-        await getStatus();
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            transitionDuration: const Duration(milliseconds: 500),
-            pageBuilder: (context, animation, secondaryAnimation) => SearchPage(),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              const begin =  Offset(0.0, 1.0);
-              const end = Offset.zero;
-              const curve = Curves.ease;
-              final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-              final offsetAnimation = animation.drive(tween);
-
-              return SlideTransition(
-                position: offsetAnimation,
-                child: child,
-              );
-            },
-          ),
-        );
-      },
-      tooltip: 'Search',
-      backgroundColor: Colors.purple,
-      foregroundColor: Colors.white,
-      child: const Icon(Icons.search),
-    );
-  }
-
   BottomAppBar bottomAppBar(BuildContext context) {
     return BottomAppBar(
       color: Colors.deepPurple,
       child: SizedBox(
-        height: 50.0,
+        height: 100.0,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            IconButton(
-              icon: const Icon(Icons.menu),
-              color: Colors.white,
-              onPressed: () {},
-            ),
+            BuildIconButtonsForBottomAppBar(iconData: Icons.edit_calendar, label: 'Schedule', onTap: () {}),
+            BuildIconButtonsForBottomAppBar(iconData: Icons.commute_outlined, label: 'Commute', onTap: () {}),
             const Spacer(),
-            IconButton(
-              icon: const Icon(Icons.search),
-              color: Colors.white,
-              onPressed: () {}, // Replace with your search function
-            ),
-            IconButton(
-              icon: const Icon(Icons.account_circle_sharp),
-              onPressed: () {},
-              color: Colors.white,
-            ),
+            BuildIconButtonsForBottomAppBar(iconData: Icons.chat, label: 'Chat', onTap: () {}),
+            BuildIconButtonsForBottomAppBar(iconData: Icons.account_circle_sharp, label: 'Profile', onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const ProfileScreen()),
+              );
+            }),
           ],
         ),
       ),
@@ -159,7 +123,11 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
         bottomNavigationBar: bottomAppBar(context),
-        floatingActionButton: buildFloatingActionButton(),
+        floatingActionButton:  CustomFloatingActionButton(
+          onPressed: () async {
+            await getStatus();
+          },
+        ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );

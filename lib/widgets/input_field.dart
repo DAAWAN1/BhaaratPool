@@ -5,7 +5,7 @@ class CustomInputField extends StatelessWidget {
   final IconData icon;
   final TextInputType keyboardType;
 
-  const CustomInputField({
+  const CustomInputField({super.key,
     required this.hintText,
     required this.icon,
     required this.keyboardType,

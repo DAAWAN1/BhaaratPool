@@ -165,15 +165,13 @@ class _NavigationScreenState extends State<NavigationScreen> {
     List<LatLng> polylineCoordinates = [];
     List<dynamic> points = [];
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-        'YOUR_API_KEY',
-        PointLatLng(curLocation.latitude, curLocation.longitude),
-        PointLatLng(dst.latitude, dst.longitude),
-        travelMode: TravelMode.driving);
+      request: PolylineRequest(origin: PointLatLng(curLocation.latitude, curLocation.longitude), destination: PointLatLng(dst.latitude, dst.longitude), mode: TravelMode.driving)
+    );
     if (result.points.isNotEmpty) {
-      result.points.forEach((PointLatLng point) {
+      for (var point in result.points) {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
         points.add({'lat': point.latitude, 'lng': point.longitude});
-      });
+      }
     } else {
       print(result.errorMessage);
     }
