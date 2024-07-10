@@ -6,7 +6,7 @@ const UserSchema=new mongoose.Schema({
         default:'',
         required:true 
     },
-    'phone number':{
+    'phoneNumber':{
         type:Number,
         required:true,
         unique:true
@@ -31,7 +31,17 @@ const UserSchema=new mongoose.Schema({
         default:false,
         required:false
     },
-    'aadhar card number':{
+    'is_validated':{
+        type:Boolean,
+        default:false,
+        required:false
+    },
+    'is_active':{
+        type:Boolean,
+        default:false,
+        required:false
+    },
+    'aadharCardNumber':{
         type:Number,
         required:true
     },
