@@ -47,7 +47,17 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            BuildIconButtonsForBottomAppBar(iconData: Icons.edit_calendar, label: 'Schedule', onTap: () {}),
+            Builder(
+              builder: (BuildContext context) {
+                return BuildIconButtonsForBottomAppBar(
+                  iconData: Icons.manage_history,
+                  label: 'History',
+                  onTap: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                );
+              },
+            ),
             BuildIconButtonsForBottomAppBar(iconData: Icons.commute_outlined, label: 'Commute', onTap: () {}),
             const Spacer(),
             BuildIconButtonsForBottomAppBar(iconData: Icons.chat, label: 'Chat', onTap: () {
@@ -72,6 +82,126 @@ class _MyHomePageState extends State<MyHomePage> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         resizeToAvoidBottomInset: false,
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              const DrawerHeader(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage("https://imageio.forbes.com/specials-images/imageserve/6663091f4017ca247461dd1d/Graphic-of-tracking-information-on-a-map/960x0.jpg?format=jpg&width=1440"),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 16.0),
+                        child: Text(
+                          'Ride History',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              ListTile(
+                leading: Icon(Icons.directions_car),
+                title: Text('Ride to Work'),
+                subtitle: Text('January 12, 2024'),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('\$15.00'),
+                    Column(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.info_outline),
+                          onPressed: () {
+                            // Add your onPressed code here!
+                          },
+                        ),
+                        Text("Report", style: TextStyle(fontSize: 6),),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              ListTile(
+                leading: Icon(Icons.directions_bike),
+                title: Text('Bike Ride'),
+                subtitle: Text('January 13, 2024'),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('\$7.00'),
+                    Column(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.info_outline),
+                          onPressed: () {
+                            // Add your onPressed code here!
+                          },
+                        ),
+                        Text("Report", style: TextStyle(fontSize: 6),),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              ListTile(
+                leading: Icon(Icons.directions_bus),
+                title: Text('Bus Ride'),
+                subtitle: Text('January 14, 2024'),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('\$2.50'),
+                    Column(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.info_outline),
+                          onPressed: () {
+                            // Add your onPressed code here!
+                          },
+                        ),
+                        Text("Report", style: TextStyle(fontSize: 6),),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              ListTile(
+                leading: Icon(Icons.directions_car),
+                title: Text('Car Ride'),
+                subtitle: Text('January 15, 2024'),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('\$20'),
+                    Column(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.info_outline),
+                          onPressed: () {
+                            // Add your onPressed code here!
+                          },
+                        ),
+                        Text("Report", style: TextStyle(fontSize: 6),),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
         body: Stack(
           children: [
             Image.asset(
