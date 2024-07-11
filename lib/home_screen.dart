@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:carpool_2/Screens/chat_screen.dart';
 import 'package:carpool_2/Screens/profile_screen.dart';
 import 'package:carpool_2/widgets/floating_actionButton.dart';
 import 'package:carpool_2/widgets/icon_buttons_bt_appbar.dart';
@@ -49,7 +50,11 @@ class _MyHomePageState extends State<MyHomePage> {
             BuildIconButtonsForBottomAppBar(iconData: Icons.edit_calendar, label: 'Schedule', onTap: () {}),
             BuildIconButtonsForBottomAppBar(iconData: Icons.commute_outlined, label: 'Commute', onTap: () {}),
             const Spacer(),
-            BuildIconButtonsForBottomAppBar(iconData: Icons.chat, label: 'Chat', onTap: () {}),
+            BuildIconButtonsForBottomAppBar(iconData: Icons.chat, label: 'Chat', onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const ChatScreen()),
+              );
+            }),
             BuildIconButtonsForBottomAppBar(iconData: Icons.account_circle_sharp, label: 'Profile', onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => const ProfileScreen()),
